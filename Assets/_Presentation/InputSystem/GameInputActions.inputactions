@@ -1,0 +1,51 @@
+{
+    "name": "GameInputActions",
+    "maps": [
+        {
+            "name": "GlobalActionMap",
+            "id": "2e39f45f-2c7a-4227-a0ba-92b27b51cfcf",
+            "actions": [
+                {
+                    "name": "Work",
+                    "type": "PassThrough",
+                    "id": "cb764841-0e92-4bc7-9bdb-bcdacea638cd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "659738b3-9b43-46b3-a29a-00ddf3a3f687",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Work",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
