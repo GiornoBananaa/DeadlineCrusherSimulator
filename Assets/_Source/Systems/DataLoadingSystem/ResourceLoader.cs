@@ -8,7 +8,7 @@ namespace Core.InstallationSystem.DataLoadingSystem
     {
         public void LoadResource<T>(string path, Type key, IRepository<T> repository) where T : class
         {
-            var res = Resources.LoadAll(path);
+            var res = Resources.LoadAll(path, key);
             repository.Create(key, res);
         }
 
