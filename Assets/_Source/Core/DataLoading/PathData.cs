@@ -1,4 +1,4 @@
-﻿namespace Core.InstallationSystem.DataLoadingSystem
+﻿namespace Core.DataLoading
 {
     public static class PathData
     {

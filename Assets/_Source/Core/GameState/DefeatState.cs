@@ -1,6 +1,6 @@
-﻿using Systems.StateMachineSystem;
+﻿using Core.StateMachine;
 
-namespace Systems.GameStateSystem
+namespace Core.GameState
 {
     public class DefeatState : IState
     {

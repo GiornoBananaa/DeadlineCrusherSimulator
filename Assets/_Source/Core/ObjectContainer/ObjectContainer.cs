@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Systems.ObjectContainerSystem
+namespace Core.ObjectContainer
 {
     public class ObjectContainer<T>
     {

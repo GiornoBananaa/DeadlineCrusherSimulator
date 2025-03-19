@@ -1,14 +1,16 @@
-﻿namespace GameFeatures.TowerDefenceFeature
+﻿using UnityEngine;
+
+namespace GameFeatures.TowerDefenceFeature
 {
     public class Task
     {
-        public int Time;
-        public TaskView View;
+        public TaskView View { get; set; }
     }
     
     public class Deadline
     {
-        public int Time;
-        public DeadlineView View;
+        public DeadlineView View { get; set; }
+        public Vector3 MoveDirection { get; set; }
+        public float MoveSpeed { get; set; }
     }
 }

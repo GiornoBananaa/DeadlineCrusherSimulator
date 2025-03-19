@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Systems.GenerationSystem;
-using Systems.StateMachineSystem;
+using Core.Generation;
+using Core.StateMachine;
 
-namespace Systems.GameStateSystem
+namespace Core.GameState
 {
     public class GameState : IState
     {

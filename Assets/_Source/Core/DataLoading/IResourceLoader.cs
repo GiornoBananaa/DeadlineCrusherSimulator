@@ -1,7 +1,7 @@
 ﻿using System;
 using Object = UnityEngine.Object;
 
-namespace Core.InstallationSystem.DataLoadingSystem
+namespace Core.DataLoading
 {
     public interface IResourceLoader
     {

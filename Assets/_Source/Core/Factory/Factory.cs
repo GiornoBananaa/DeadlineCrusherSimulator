@@ -1,4 +1,4 @@
-﻿namespace Systems.FactorySystem
+﻿namespace Core.Factory
 {
     public abstract class Factory<T>
     {

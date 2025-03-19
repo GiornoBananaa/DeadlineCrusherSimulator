@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Core.InstallationSystem.DataLoadingSystem;
 using GameFeatures.ClickerFeature.Configs;
 using GameFeatures.ClickerFeature.Views;
+using Core.DataLoading;
 using UnityEngine;
 
 namespace GameFeatures.ClickerFeature

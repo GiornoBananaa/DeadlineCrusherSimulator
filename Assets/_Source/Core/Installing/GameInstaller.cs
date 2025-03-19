@@ -1,18 +1,17 @@
-using Core.InstallationSystem.DataLoadingSystem;
 using GameFeatures.ClickerFeature;
 using GameFeatures.ClickerFeature.Configs;
 using GameFeatures.ClickerFeature.Views;
 using GameFeatures.TowerDefenceFeature;
 using GameFeatures.TowerDefenceFeature.Configs;
 using GameFeatures.TowerDefenceFeature.ScheduleGeneration;
-using Systems.FactorySystem;
-using Systems.GameStateSystem;
-using Systems.GenerationSystem;
-using Systems.ObjectContainerSystem;
+using Core.DataLoading;
+using Core.Factory;
+using Core.GameState;
+using Core.ObjectContainer;
 using UnityEngine;
 using Zenject;
 
-namespace Systems.InstallingSystem
+namespace Core.Installing
 {
     public class GameInstaller : MonoInstaller
     {
@@ -22,6 +21,7 @@ namespace Systems.InstallingSystem
         public override void InstallBindings()
         {
             BindGameStates();
+            BindExecuteSystems();
             BindClickerFeature();
             BindTowerDefenceFeature();
             BindDataLoad();
@@ -30,6 +30,11 @@ namespace Systems.InstallingSystem
         public void BindGameStates()
         {
             Container.Bind<Game>().AsSingle();
+        }
+        
+        public void BindExecuteSystems()
+        {
+            Container.BindInterfacesAndSelfTo<Core.ServiceUpdater.ServiceUpdater>().AsSingle();
         }
         
         private void BindClickerFeature()
@@ -47,6 +52,8 @@ namespace Systems.InstallingSystem
             Container.Bind<PoolFactory<Deadline>>().To<DeadlineCreator>().AsSingle();
             Container.BindInterfacesAndSelfTo<DeadlinesGenerator>().AsSingle().NonLazy();
             Container.Bind<ScheduleView>().FromInstance(_scheduleView).AsSingle();
+            
+            Container.Bind<DeadlineMovementSystem>().AsSingle().NonLazy();
         }
         
         private void BindDataLoad()

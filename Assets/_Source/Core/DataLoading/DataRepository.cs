@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
 
-namespace Core.InstallationSystem.DataLoadingSystem
+namespace Core.DataLoading
 {
     public class DataRepository<T> : IRepository<T> where T : Object
     {

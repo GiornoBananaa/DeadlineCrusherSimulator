@@ -1,8 +1,8 @@
-﻿using Systems.GameStateSystem;
+﻿using Core.GameState;
 using UnityEngine;
 using Zenject;
 
-namespace Systems.InstallingSystem
+namespace Core.Installing
 {
     public class Bootstrapper : MonoBehaviour
     {

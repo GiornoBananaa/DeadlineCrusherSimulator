@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9595ac1d7084523b8b5200105e9636e, type: 3}
   m_Name: GenerationConfig
   m_EditorClassIdentifier: 
-  <DeadlinesGenerationCooldown>k__BackingField: 0
+  <DeadlinesGenerationCooldown>k__BackingField: 3

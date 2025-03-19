@@ -1,4 +1,4 @@
-﻿namespace Systems.GenerationSystem
+﻿namespace Core.Generation
 {
     public interface IObjectGenerator
     {

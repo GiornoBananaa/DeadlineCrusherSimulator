@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Systems.GameStateSystem;
 
-namespace Systems.StateMachineSystem
+namespace Core.StateMachine
 {
     public class StateMachine
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Core.InstallationSystem.DataLoadingSystem;
 using Cysharp.Threading.Tasks;
 using GameFeatures.TowerDefenceFeature.Configs;
-using Systems.FactorySystem;
-using Systems.GenerationSystem;
+using Core.DataLoading;
+using Core.Factory;
+using Core.Generation;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ namespace GameFeatures.TowerDefenceFeature.ScheduleGeneration
                 throw new NullReferenceException("No GenerationConfig found");
             
             _generationCooldown = generationConfig.DeadlinesGenerationCooldown;
-            _spawnPoints = scheduleView.LineStartPoints;
+            _spawnPoints = scheduleView.LineEndPoints;
             _deadlineFactory = deadlineFactory;
         }
 
@@ -44,11 +44,14 @@ namespace GameFeatures.TowerDefenceFeature.ScheduleGeneration
 
         private async UniTask GenerationLoop(CancellationToken cancellationToken)
         {
-            await UniTask.WaitForSeconds(_generationCooldown, cancellationToken: cancellationToken);
-            Deadline deadline = _deadlineFactory.Create();
-            deadline.View.transform.parent = _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)];
-            deadline.View.transform.localPosition = Vector3.zero;
-            deadline.View.transform.localRotation = quaternion.identity;
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await UniTask.WaitForSeconds(_generationCooldown, cancellationToken: cancellationToken);
+                Deadline deadline = _deadlineFactory.Create();
+                deadline.View.transform.parent = _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)];
+                deadline.View.transform.localPosition = Vector3.zero;
+                deadline.View.transform.localRotation = quaternion.identity;
+            }
         }
     }
 }

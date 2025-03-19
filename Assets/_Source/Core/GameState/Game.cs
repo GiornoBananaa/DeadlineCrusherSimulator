@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Systems.GenerationSystem;
-using Systems.StateMachineSystem;
+using Core.Generation;
 
-namespace Systems.GameStateSystem
+namespace Core.GameState
 {
     public enum GameStates
     {
@@ -12,11 +11,11 @@ namespace Systems.GameStateSystem
     
     public class Game
     {
-        private readonly StateMachine _gameStateMachine;
+        private readonly StateMachine.StateMachine _gameStateMachine;
         
         public Game(IEnumerable<IObjectGenerator> objectGenerators)
         {
-            _gameStateMachine = new StateMachine(
+            _gameStateMachine = new StateMachine.StateMachine(
                 new GameState(objectGenerators),
                 new DefeatState()
                 );

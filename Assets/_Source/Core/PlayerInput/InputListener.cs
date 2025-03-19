@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-namespace Systems.InputSystem
+namespace Core.PlayerInput
 {
     public class InputListener : MonoBehaviour
     {
