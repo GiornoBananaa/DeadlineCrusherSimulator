@@ -17,6 +17,7 @@ namespace GameFeatures.TowerDefenceFeature
         private readonly DeadlineView _prefab;
         private readonly Vector3 _moveDirection;
         private readonly float _moveSpeed;
+        private readonly float _health;
         
         public DeadlineCreator(IRepository<ScriptableObject> repository, ObjectContainer<Deadline> deadlinesContainer)
         {
@@ -27,6 +28,7 @@ namespace GameFeatures.TowerDefenceFeature
             _prefab = deadline.Prefab;
             _moveDirection = deadline.MoveDirection;
             _moveSpeed = deadline.MoveSpeed;
+            _health = deadline.Health;
             
             _pool = new ObjectPool<Deadline>(CreateTask);
             _deadlinesContainer = deadlinesContainer;
@@ -37,10 +39,10 @@ namespace GameFeatures.TowerDefenceFeature
             return _pool.Get();
         }
         
-        public override void Release(Deadline deadline)
+        public override void Release(Deadline projectile)
         {
-            _pool.Release(deadline);
-            _deadlinesContainer.Remove(deadline);
+            _pool.Release(projectile);
+            _deadlinesContainer.Remove(projectile);
         }
         
         private Deadline CreateTask()
@@ -49,8 +51,10 @@ namespace GameFeatures.TowerDefenceFeature
             {
                 View = Object.Instantiate(_prefab),
                 MoveDirection = _moveDirection,
-                MoveSpeed = _moveSpeed
+                MoveSpeed = _moveSpeed,
+                Health = _health,
             };
+            deadline.View.LinkEntity(deadline);
             _deadlinesContainer.Add(deadline);
             return deadline;
         }

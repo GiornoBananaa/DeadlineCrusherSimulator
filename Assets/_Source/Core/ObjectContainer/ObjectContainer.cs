@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Core.ObjectContainer
 {
@@ -8,14 +9,19 @@ namespace Core.ObjectContainer
         
         public IEnumerable<T> Objects => _objects;
         
+        public event Action<T> OnObjectAdded;
+        public event Action<T> OnObjectRemoved;
+        
         public void Add(T obj)
         {
             _objects.Add(obj);
+            OnObjectAdded?.Invoke(obj);
         }
         
         public void Remove(T obj)
         {
             _objects.Remove(obj);
+            OnObjectRemoved?.Invoke(obj);
         }
     }
 }

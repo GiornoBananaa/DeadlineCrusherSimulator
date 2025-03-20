@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Core.EntitySystem;
 using Core.ObjectContainer;
-using Core.ServiceUpdater;
 using UnityEngine;
 
 namespace GameFeatures.TowerDefenceFeature
@@ -14,7 +14,7 @@ namespace GameFeatures.TowerDefenceFeature
         {
             foreach (var deadline in objects)
             {
-                deadline.View.transform.position += deadline.MoveDirection.normalized * deadline.MoveSpeed * Time.deltaTime;
+                deadline.View.transform.position += deadline.MoveDirection.normalized * (deadline.MoveSpeed * Time.deltaTime);
             }
         }
     }

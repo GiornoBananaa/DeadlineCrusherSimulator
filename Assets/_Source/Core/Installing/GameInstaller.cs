@@ -34,7 +34,7 @@ namespace Core.Installing
         
         public void BindExecuteSystems()
         {
-            Container.BindInterfacesAndSelfTo<Core.ServiceUpdater.ServiceUpdater>().AsSingle();
+            Container.BindInterfacesAndSelfTo<Core.EntitySystem.ServiceUpdater>().AsSingle();
         }
         
         private void BindClickerFeature()
@@ -48,12 +48,17 @@ namespace Core.Installing
         {
             Container.Bind<ObjectContainer<Deadline>>().AsSingle();
             Container.Bind<ObjectContainer<Task>>().AsSingle();
+            Container.Bind<ObjectContainer<TaskProjectile>>().AsSingle();
             Container.Bind<PoolFactory<Task>>().To<TaskCreator>().AsSingle();
             Container.Bind<PoolFactory<Deadline>>().To<DeadlineCreator>().AsSingle();
+            Container.Bind<PoolFactory<TaskProjectile>>().To<TaskProjectileCreator>().AsSingle();
             Container.BindInterfacesAndSelfTo<DeadlinesGenerator>().AsSingle().NonLazy();
             Container.Bind<ScheduleView>().FromInstance(_scheduleView).AsSingle();
             
             Container.Bind<DeadlineMovementSystem>().AsSingle().NonLazy();
+            Container.Bind<TaskShootingSystem>().AsSingle().NonLazy();
+            Container.Bind<DeadlineHealthStateReactSystem>().AsSingle().NonLazy();
+            Container.Bind<ProjectileDamageDealSystem>().AsSingle().NonLazy();
         }
         
         private void BindDataLoad()

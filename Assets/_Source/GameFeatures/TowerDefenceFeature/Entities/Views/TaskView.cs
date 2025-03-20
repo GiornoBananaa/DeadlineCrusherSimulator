@@ -1,10 +1,13 @@
+using Core.EntitySystem;
+using Core.PhysicsDetection;
 using UnityEngine;
 
 namespace GameFeatures.TowerDefenceFeature
 {
-    public class TaskView : MonoBehaviour
+    public class TaskView : GameEntityLinker
     {
         [SerializeField] private MeshRenderer _meshRenderer;
+        [field: SerializeField] public CollisionDetector CollisionDetector { get; private set; }
         
         [field: SerializeField] public Transform ShootPoint { get; private set; }
         

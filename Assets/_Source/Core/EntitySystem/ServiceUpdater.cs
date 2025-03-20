@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
 using Zenject;
 
-namespace Core.ServiceUpdater
+namespace Core.EntitySystem
 {
-    public interface IExecutable
-    {
-        void Execute();
-    }
-
     public class ServiceUpdater: ITickable
     {
         private readonly List<IExecutable> _executables = new();
