@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Core.ObjectContainer;
-using Core.EntitySystem;
 
 namespace Core.EntitySystem
 {

@@ -35,6 +35,15 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RaycastInput"",
+                    ""type"": ""Button"",
+                    ""id"": ""1bec7d8d-99ac-4903-a4e6-c6e3f0b76fcd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -46,6 +55,17 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Work"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb504e13-acce-4eb2-924b-44c5ae9937ac"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RaycastInput"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -74,6 +94,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         // GlobalActionMap
         m_GlobalActionMap = asset.FindActionMap("GlobalActionMap", throwIfNotFound: true);
         m_GlobalActionMap_Work = m_GlobalActionMap.FindAction("Work", throwIfNotFound: true);
+        m_GlobalActionMap_RaycastInput = m_GlobalActionMap.FindAction("RaycastInput", throwIfNotFound: true);
     }
 
     ~@GameInputActions()
@@ -141,11 +162,13 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_GlobalActionMap;
     private List<IGlobalActionMapActions> m_GlobalActionMapActionsCallbackInterfaces = new List<IGlobalActionMapActions>();
     private readonly InputAction m_GlobalActionMap_Work;
+    private readonly InputAction m_GlobalActionMap_RaycastInput;
     public struct GlobalActionMapActions
     {
         private @GameInputActions m_Wrapper;
         public GlobalActionMapActions(@GameInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Work => m_Wrapper.m_GlobalActionMap_Work;
+        public InputAction @RaycastInput => m_Wrapper.m_GlobalActionMap_RaycastInput;
         public InputActionMap Get() { return m_Wrapper.m_GlobalActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -158,6 +181,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Work.started += instance.OnWork;
             @Work.performed += instance.OnWork;
             @Work.canceled += instance.OnWork;
+            @RaycastInput.started += instance.OnRaycastInput;
+            @RaycastInput.performed += instance.OnRaycastInput;
+            @RaycastInput.canceled += instance.OnRaycastInput;
         }
 
         private void UnregisterCallbacks(IGlobalActionMapActions instance)
@@ -165,6 +191,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Work.started -= instance.OnWork;
             @Work.performed -= instance.OnWork;
             @Work.canceled -= instance.OnWork;
+            @RaycastInput.started -= instance.OnRaycastInput;
+            @RaycastInput.performed -= instance.OnRaycastInput;
+            @RaycastInput.canceled -= instance.OnRaycastInput;
         }
 
         public void RemoveCallbacks(IGlobalActionMapActions instance)
@@ -194,5 +223,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     public interface IGlobalActionMapActions
     {
         void OnWork(InputAction.CallbackContext context);
+        void OnRaycastInput(InputAction.CallbackContext context);
     }
 }

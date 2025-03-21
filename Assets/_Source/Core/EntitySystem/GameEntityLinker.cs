@@ -1,5 +1,4 @@
-﻿using Core.EntitySystem;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Core.EntitySystem
 {

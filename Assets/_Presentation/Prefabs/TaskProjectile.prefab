@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 192735086878898360}
   - component: {fileID: 2573258700386517549}
   - component: {fileID: 1742706944403690366}
-  - component: {fileID: 3402167456478759091}
+  - component: {fileID: 7866587810671378650}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 36db1a64042e88e45bd9d13a6cf7ff8c, type: 2}
+  - {fileID: 2100000, guid: 7daab7ad74826a349a349834e83c3ce9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +109,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3402167456478759091
+--- !u!114 &7866587810671378650
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 617816829809358591}
   - component: {fileID: 5298280143962978332}
   m_Layer: 0
-  m_Name: Task
+  m_Name: TaskProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 2573258700386517549}
-  <CollisionDetector>k__BackingField: {fileID: 3402167456478759091}
+  <CollisionDetector>k__BackingField: {fileID: 7866587810671378650}
   <ShootPoint>k__BackingField: {fileID: 6845427254959983725}
 --- !u!1 &8166299587433647418
 GameObject:
