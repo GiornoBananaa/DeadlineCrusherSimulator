@@ -8,7 +8,7 @@ namespace GameFeatures.TowerDefence.TaskPlacing
 
         public void ShowPlacingPrediction(Vector3 position)
         {
-            _predictionTask.transform.position = position;
+            _predictionTask.transform.localPosition = position;
             _predictionTask.SetActive(true);
         }
         

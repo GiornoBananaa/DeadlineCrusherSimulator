@@ -6,17 +6,17 @@ namespace GameFeatures.Installing
 {
     public class Bootstrapper : MonoBehaviour
     {
-        private Game _game;
+        private GameStateMachine _gameStateMachine;
         
         [Inject]
-        public void Construct(Game game)
+        public void Construct(GameStateMachine gameStateMachine)
         {
-            _game = game;
+            _gameStateMachine = gameStateMachine;
         }
         
         public void Start()
         {
-            _game.SetState(GameStates.Game);
+            _gameStateMachine.SetState(GameStates.Game);
         }
     }
 }

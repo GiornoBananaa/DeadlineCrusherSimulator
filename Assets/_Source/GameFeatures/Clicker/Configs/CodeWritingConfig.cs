@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-namespace GameFeatures.Clicker.Configs
+namespace GameFeatures.Clicker
 {
     [CreateAssetMenu(menuName = "Configs/Clicker/CodeWritingConfig")]
     public class CodeWritingConfig : ScriptableObject
     {
         [SerializeField] private TextAsset _textAsset;
-
-        public string[] TextLines;
+        
+        [HideInInspector] public string[] TextLines;
         
         public void ApplyTextAsset()
         {

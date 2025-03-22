@@ -2,7 +2,7 @@
 
 namespace GameFeatures.Clicker
 {
-    public class Clicker
+    public class ClickCounter
     {
         private uint _clicks;
 

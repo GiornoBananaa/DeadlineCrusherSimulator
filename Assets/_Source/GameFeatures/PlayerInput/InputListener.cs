@@ -7,13 +7,13 @@ namespace GameFeatures.PlayerInput
     public class InputListener : MonoBehaviour
     {
         private GameInputActions _gameInput;
-        private Clicker.Clicker _clicker;
+        private Clicker.ClickCounter _clickCounter;
         private RaycastInputListener _raycastInputListener;
 
         [Inject]
-        public void Construct(Clicker.Clicker clicker, RaycastInputListener raycastInputListener)
+        public void Construct(Clicker.ClickCounter clickCounter, RaycastInputListener raycastInputListener)
         {
-            _clicker = clicker;
+            _clickCounter = clickCounter;
             _raycastInputListener = raycastInputListener;
         }
     
@@ -45,7 +45,7 @@ namespace GameFeatures.PlayerInput
 
         private void Click(InputAction.CallbackContext callbackContext)
         {
-            _clicker.Click();
+            _clickCounter.Click();
         }
         
         private void RaycastInput(InputAction.CallbackContext callbackContext)

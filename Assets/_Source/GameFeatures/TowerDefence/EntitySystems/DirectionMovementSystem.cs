@@ -9,12 +9,15 @@ namespace GameFeatures.TowerDefence
     {
         public DeadlineMovementSystem(ObjectContainer<Deadline> objectContainer, ServiceUpdater serviceUpdater) : base(objectContainer, serviceUpdater)
         { }
-
+        
+        protected override UpdateMode ExecuteMode => UpdateMode.Fixed;
+        
         protected override void Execute(IEnumerable<Deadline> objects)
         {
             foreach (var deadline in objects)
             {
-                deadline.View.transform.position += deadline.MoveDirection.normalized * (deadline.MoveSpeed * Time.deltaTime);
+                Vector3 position = deadline.View.transform.position + deadline.MoveDirection * (deadline.MoveSpeed * Time.fixedDeltaTime);
+                deadline.View.Rigidbody.MovePosition(position);
             }
         }
     }

@@ -20,8 +20,10 @@ namespace Core.EntitySystem
             }
 
             _objectContainer.OnObjectAdded += Subscribe;
+            _objectContainer.OnObjectRemoved += Unsubscribe;
         }
         
         public abstract void Subscribe(T obj);
+        public abstract void Unsubscribe(T obj);
     }
 }

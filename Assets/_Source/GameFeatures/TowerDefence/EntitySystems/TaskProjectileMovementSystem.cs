@@ -10,11 +10,14 @@ namespace GameFeatures.TowerDefence
         public TaskProjectileMovementSystem(ObjectContainer<TaskProjectile> objectContainer, ServiceUpdater serviceUpdater) : base(objectContainer, serviceUpdater)
         { }
 
+        protected override UpdateMode ExecuteMode => UpdateMode.Fixed;
+        
         protected override void Execute(IEnumerable<TaskProjectile> objects)
         {
             foreach (var projectile in objects)
             {
-                projectile.View.transform.position += projectile.MoveDirection.normalized * (projectile.MoveSpeed * Time.deltaTime);
+                Vector3 position = projectile.View.transform.position + projectile.View.transform.forward * (projectile.MoveSpeed * Time.fixedDeltaTime);
+                projectile.View.Rigidbody.MovePosition(position);
             }
         }
     }

@@ -10,14 +10,14 @@ using Object = UnityEngine.Object;
 
 namespace GameFeatures.TowerDefence
 {
-    public class TaskProjectileCreator : PoolFactory<TaskProjectile>
+    public class TaskProjectileCreator : IPoolFactory<TaskProjectile>
     {
         private readonly ObjectPool<TaskProjectile> _pool;
         private readonly ObjectContainer<TaskProjectile> _projectileContainer;
         private readonly TaskProjectileView _prefab;
-        private readonly Vector3 _moveDirection;
         private readonly float _moveSpeed;
         private readonly float _damage;
+        private readonly float _lifeTime;
         
         public TaskProjectileCreator(IRepository<ScriptableObject> repository, ObjectContainer<TaskProjectile> projectileContainer)
         {
@@ -26,18 +26,25 @@ namespace GameFeatures.TowerDefence
                 throw new NullReferenceException("No TaskProjectileConfig found");
             
             _prefab = config.Prefab;
+            _moveSpeed = config.MoveSpeed;
             _damage = config.Damage;
+            _lifeTime = config.LifeTime;
             _pool = new ObjectPool<TaskProjectile>(CreateTask);
             _projectileContainer = projectileContainer;
         }
         
-        public override TaskProjectile Create()
+        public TaskProjectile Create()
         {
-            return _pool.Get();
+            TaskProjectile projectile = _pool.Get();
+            projectile.View.gameObject.SetActive(true);
+            ResetValues(projectile);
+            _projectileContainer.Add(projectile);
+            return projectile;
         }
         
-        public override void Release(TaskProjectile projectile)
+        public void Release(TaskProjectile projectile)
         {
+            projectile.View.gameObject.SetActive(false);
             _pool.Release(projectile);
             _projectileContainer.Remove(projectile);
         }
@@ -46,16 +53,19 @@ namespace GameFeatures.TowerDefence
         {
             TaskProjectile projectile = new TaskProjectile
             {
-                View = Object.Instantiate(_prefab),
-                MoveDirection = Vector3.forward,
-                MoveSpeed = _moveSpeed,
-                Damage = _damage,
+                View = Object.Instantiate(_prefab)
             };
-            
+            ResetValues(projectile);
             projectile.View.LinkEntity(projectile);
-            
-            _projectileContainer.Add(projectile);
             return projectile;
+        }
+        
+        private void ResetValues(TaskProjectile projectile)
+        {
+            projectile.MoveSpeed = _moveSpeed;
+            projectile.LifeTime = _lifeTime;
+            projectile.LifeTimeCounter = 0;
+            projectile.Damage = _damage;
         }
     }
 }

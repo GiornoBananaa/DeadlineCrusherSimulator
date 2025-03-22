@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameFeatures.TowerDefence.Configs
+namespace GameFeatures.TowerDefence
 {
     [CreateAssetMenu(menuName = "Configs/TowerDefence/ScheduleGridConfig")]
     public class ScheduleGridConfig : ScriptableObject

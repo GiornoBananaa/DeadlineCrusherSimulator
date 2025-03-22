@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Utils;
 
 namespace Core.PhysicsDetection
@@ -28,39 +30,39 @@ namespace Core.PhysicsDetection
             }
         }
         
-        [SerializeField] private LayerCollisionEvent[] _eventsOnCollisionEnter;
-        [SerializeField] private LayerCollisionEvent[] _eventsOnCollisionExit;
+        [SerializeField] private LayerCollisionEvent[] _eventsOnTriggerEnter;
+        [SerializeField] private LayerCollisionEvent[] _eventsOnTriggerExit;
 
-        private readonly Dictionary<ICollisionEnterListener, CollisionSubscription> _collisionEnterListener = new();
-        private readonly Dictionary<ICollisionExitListener, CollisionSubscription> _collisionExitListener = new();
+        private readonly Dictionary<ITriggerEnterListener, CollisionSubscription> _triggerEnterListener = new();
+        private readonly Dictionary<ITriggerExitListener, CollisionSubscription> _triggerExitListener = new();
 
-        #region CollisionEnter
+        #region TriggerEnter
         
-        public void Subscribe(ICollisionEnterListener enterListener, LayerMask layerMask, object additionalData = null)
+        public void Subscribe(ITriggerEnterListener enterListener, LayerMask layerMask, object additionalData = null)
         {
-            _collisionEnterListener.Add(enterListener, new(layerMask, additionalData));
+            _triggerEnterListener.Add(enterListener, new(layerMask, additionalData));
         }
 
-        public void Subscribe(ICollisionEnterListener enterListener, object additionalData = null)
+        public void Subscribe(ITriggerEnterListener enterListener, object additionalData = null)
         {
-            _collisionEnterListener.Add(enterListener, new(Physics.AllLayers, additionalData));
+            _triggerEnterListener.Add(enterListener, new(Physics.AllLayers, additionalData));
         }
 
-        public void UnSubscribe(ICollisionEnterListener enterListener, object additionalData = null)
+        public void Unsubscribe(ITriggerEnterListener enterListener)
         {
-            _collisionEnterListener.Remove(enterListener);
+            _triggerEnterListener.Remove(enterListener);
         }
-
-        private void OnCollisionEnter(Collision other)
+        
+        private void OnTriggerEnter(Collider other)
         {
-            foreach (var listener in _collisionEnterListener)
+            foreach (var listener in _triggerEnterListener.ToArray())
             {
                 if (listener.Value.LayerMask.ContainsLayer(other.gameObject.layer))
                 {
-                    listener.Key.CollisionEnter(other, listener.Value.AdditionalData);
+                    listener.Key.TriggerEnter(other, listener.Value.AdditionalData);
                 }
             }
-            foreach (var eventOnCollision in _eventsOnCollisionEnter)
+            foreach (var eventOnCollision in _eventsOnTriggerEnter.ToArray())
             {
                 if(eventOnCollision.LayerMask.ContainsLayer(other.gameObject.layer))
                 {
@@ -71,33 +73,33 @@ namespace Core.PhysicsDetection
         
         #endregion
         
-        #region CollisionExit
+        #region TriggerExit
         
-        public void Subscribe(ICollisionExitListener exitListener, LayerMask layerMask, object additionalData = null)
+        public void Subscribe(ITriggerExitListener exitListener, LayerMask layerMask, object additionalData = null)
         {
-            _collisionExitListener.Add(exitListener, new(layerMask, additionalData));
+            _triggerExitListener.Add(exitListener, new(layerMask, additionalData));
         }
 
-        public void Subscribe(ICollisionExitListener exitListener, object additionalData = null)
+        public void Subscribe(ITriggerExitListener exitListener, object additionalData = null)
         {
-            _collisionExitListener.Add(exitListener, new(Physics.AllLayers, additionalData));
+            _triggerExitListener.Add(exitListener, new(Physics.AllLayers, additionalData));
         }
 
-        public void UnSubscribe(ICollisionExitListener exitListener, object additionalData = null)
+        public void Unsubscribe(ITriggerExitListener exitListener)
         {
-            _collisionExitListener.Remove(exitListener);
+            _triggerExitListener.Remove(exitListener);
         }
 
-        private void OnCollisionExit(Collision other)
+        private void OnTriggerExit(Collider other)
         {
-            foreach (var listener in _collisionExitListener)
+            foreach (var listener in _triggerExitListener.ToArray())
             {
                 if (listener.Value.LayerMask.ContainsLayer(other.gameObject.layer))
                 {
-                    listener.Key.CollisionExit(other, listener.Value.AdditionalData);
+                    listener.Key.TriggerExit(other, listener.Value.AdditionalData);
                 }
             }
-            foreach (var eventOnCollision in _eventsOnCollisionExit)
+            foreach (var eventOnCollision in _eventsOnTriggerExit.ToArray())
             {
                 if(eventOnCollision.LayerMask.ContainsLayer(other.gameObject.layer))
                 {

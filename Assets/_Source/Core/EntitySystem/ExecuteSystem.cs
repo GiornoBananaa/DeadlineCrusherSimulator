@@ -7,9 +7,11 @@ namespace Core.EntitySystem
     {
         private readonly ObjectContainer<T> _objectContainer;
         
-        public ExecuteSystem(ObjectContainer<T> objectContainer, EntitySystem.ServiceUpdater serviceUpdater)
+        protected virtual UpdateMode ExecuteMode => UpdateMode.Default;
+        
+        public ExecuteSystem(ObjectContainer<T> objectContainer, ServiceUpdater serviceUpdater)
         {
-            serviceUpdater.Subscribe(this);
+            serviceUpdater.Subscribe(this, ExecuteMode);
             _objectContainer = objectContainer;
         }
         

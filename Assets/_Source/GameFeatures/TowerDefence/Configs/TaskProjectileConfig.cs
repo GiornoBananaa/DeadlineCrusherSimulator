@@ -7,6 +7,7 @@ namespace GameFeatures.TowerDefence.Configs
     {
         [field: SerializeField] public TaskProjectileView Prefab { get; private set; }
         [field: SerializeField] public LayerMask DamageableLayerMask { get; private set; }
+        [field: SerializeField] public float LifeTime { get; private set; }
         [field: SerializeField] public float MoveSpeed { get; private set; }
         [field: SerializeField] public float Damage { get; private set; }
     }

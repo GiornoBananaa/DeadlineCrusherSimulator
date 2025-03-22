@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Core.DataLoading;
 using GameFeatures.TowerDefence.Configs;
 using GameFeatures.TowerDefence.ScheduleGeneration;
@@ -17,39 +18,50 @@ namespace GameFeatures.TowerDefence.TaskPlacing
         public float MaxX => _cellXSize * _rowsCount;
         public float MaxY => _cellYSize * _linesCount;
         
-        public ScheduleGrid(DataRepository<ScriptableObject> dataRepository, ScheduleView scheduleView)
+        public ScheduleGrid(IRepository<ScriptableObject> dataRepository, ScheduleView scheduleView)
         {
             ScheduleGridConfig config = dataRepository.GetItem<ScheduleGridConfig>().FirstOrDefault();
             if(config == null) return;
             
+            _linesCount = config.LinesCount;
+            _rowsCount = config.RowsCount;
+            _cellXSize = config.CellXSize;
+            _cellYSize = config.CellYSize;
+            
             _scheduleView = scheduleView;
         }
         
-        public Vector3 GetGridPositionClamped(Vector3 position)
-        {
-            Vector3 localGridPosition = _scheduleView.GridPivot.InverseTransformPoint(position);
-            
-            int line = (int)Mathf.Clamp(localGridPosition.y / _cellYSize, 0, _linesCount);
-            int row =  (int)Mathf.Clamp(localGridPosition.x / _cellXSize, 0, _rowsCount);
-            
-            return new Vector3(row, line, 0);
-        }
-        
-        public bool TryGetGridPosition(Vector3 position, out Vector3 gridPosition)
+        public bool IsOnGrid(Vector3 position)
         {
             Vector3 localGridPosition = _scheduleView.GridPivot.InverseTransformPoint(position);
             
             int line = (int)(localGridPosition.y / _cellYSize);
             int row =  (int)(localGridPosition.x / _cellXSize);
-
-            if (line < 0 || row < 0 || line >= _linesCount || row >= _rowsCount)
-            {
-                gridPosition = default;
-                return false;
-            }
             
-            gridPosition = new Vector3(line, row, 0);
-            return true;
+            return line >= 0 && row >= 0 && line < _linesCount && row < _rowsCount;
+        }
+        
+        public void SnapToGrid(Transform transform, int minLine = int.MinValue, int maxLine = int.MaxValue, int minRow = int.MinValue, int maxRow = int.MaxValue)
+        {
+            transform.parent = _scheduleView.GridPivot.transform;
+            transform.localPosition = GetLocalGridPositionClamped(transform.position, minLine, maxLine, minRow, maxRow);
+        }
+        
+        public void SnapToGrid(Transform transform, Vector3 localPosition, int minLine = int.MinValue, int maxLine = int.MaxValue, int minRow = int.MinValue, int maxRow = int.MaxValue)
+        {
+            transform.parent = _scheduleView.GridPivot.transform;
+            transform.localPosition = GetGridPositionClamped(localPosition, minLine, maxLine, minRow, maxRow);
+        }
+        
+        public Vector3 GetLocalGridPositionClamped(Vector3 worldPosition, int minLine = int.MinValue, int maxLine = int.MaxValue, int minRow = int.MinValue, int maxRow = int.MaxValue) 
+            => GetGridPositionClamped(_scheduleView.GridPivot.InverseTransformPoint(worldPosition), minLine, maxLine, minRow, maxRow);
+        
+        public Vector3 GetGridPositionClamped(Vector3 localGridPosition, int minLine = int.MinValue, int maxLine = int.MaxValue, int minRow = int.MinValue, int maxRow = int.MaxValue)
+        {
+            int line = (int)Mathf.Round(Mathf.Clamp(localGridPosition.y / _cellYSize, Mathf.Max(0, minLine), Mathf.Min(maxLine, _linesCount) - 1));
+            int row =  (int)Mathf.Round(Mathf.Clamp(localGridPosition.x / _cellXSize, Mathf.Max(0, minRow), Mathf.Min(maxRow, _rowsCount) - 1));
+            
+            return new Vector3(row * _cellXSize, line * _cellYSize, 0);
         }
     }
 }

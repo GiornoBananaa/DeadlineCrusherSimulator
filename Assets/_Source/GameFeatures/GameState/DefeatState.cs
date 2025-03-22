@@ -8,7 +8,7 @@ namespace GameFeatures.GameState
         {
             
         }
-        
+
         public void Enter()
         {
             

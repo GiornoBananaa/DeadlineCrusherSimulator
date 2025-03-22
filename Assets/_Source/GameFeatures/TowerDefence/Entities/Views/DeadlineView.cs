@@ -7,6 +7,7 @@ namespace GameFeatures.TowerDefence
 {
     public class DeadlineView : GameEntityLinker
     {
+        [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public CollisionDetector CollisionDetector { get; private set; }
     }
 }

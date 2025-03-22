@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace GameFeatures.Clicker.Configs
+namespace GameFeatures.Clicker
 {
     [CustomEditor(typeof(CodeWritingConfig))]
     public class CodeWritingConfigEditor : UnityEditor.Editor
@@ -27,8 +27,7 @@ namespace GameFeatures.Clicker.Configs
                 ((CodeWritingConfig)serializedObject.targetObject).ApplyTextAsset();
             }
             EditorGUILayout.Space(5);
-            
-            EditorGUILayout.PropertyField(_textLines);
+            EditorGUILayout.LabelField($"Registered lines: {_textLines.arraySize}");
             
             serializedObject.ApplyModifiedProperties();
         }

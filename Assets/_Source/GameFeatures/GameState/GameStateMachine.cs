@@ -1,21 +1,24 @@
 ﻿using System.Collections.Generic;
 using Core.Generation;
+using Core.StateMachine;
 
 namespace GameFeatures.GameState
 {
     public enum GameStates
     {
-        Game = 0,
-        Defeat = 1
+        Menu = 0,
+        Game = 1,
+        Defeat = 2
     }
     
-    public class Game
+    public class GameStateMachine
     {
-        private readonly Core.StateMachine.StateMachine _gameStateMachine;
+        private readonly StateMachine _gameStateMachine;
         
-        public Game(IEnumerable<IObjectGenerator> objectGenerators)
+        public GameStateMachine(IEnumerable<IObjectGenerator> objectGenerators)
         {
-            _gameStateMachine = new Core.StateMachine.StateMachine(
+            _gameStateMachine = new StateMachine(
+                new MenuState(),
                 new GameState(objectGenerators),
                 new DefeatState()
                 );
@@ -25,6 +28,9 @@ namespace GameFeatures.GameState
         {
             switch (state)
             {
+                case GameStates.Menu:
+                    _gameStateMachine.ChangeState<MenuState>();
+                    break;
                 case GameStates.Game:
                     _gameStateMachine.ChangeState<GameState>();
                     break;

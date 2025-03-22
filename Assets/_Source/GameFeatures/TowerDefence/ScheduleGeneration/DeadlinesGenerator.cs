@@ -15,22 +15,21 @@ namespace GameFeatures.TowerDefence.ScheduleGeneration
 {
     public class DeadlinesGenerator : IObjectGenerator
     {
-        private readonly PoolFactory<Deadline> _deadlineFactory;
-        private readonly ScheduleView _scheduleView;
+        private readonly IPoolFactory<Deadline> _deadlineFactory;
         private readonly ScheduleGrid _scheduleGrid;
         private readonly float _generationCooldown;
+        private readonly float _last;
         
         private CancellationTokenSource _generationCancellationToken;
         
-        public DeadlinesGenerator(IRepository<ScriptableObject> repository, ScheduleView scheduleView, 
-            PoolFactory<Deadline> deadlineFactory, ScheduleGrid scheduleGrid)
+        public DeadlinesGenerator(IRepository<ScriptableObject> repository, 
+            IPoolFactory<Deadline> deadlineFactory, ScheduleGrid scheduleGrid)
         {
             GenerationConfig generationConfig = repository.GetItem<GenerationConfig>().FirstOrDefault();
             if (generationConfig == null)
                 throw new NullReferenceException("No GenerationConfig found");
             
             _generationCooldown = generationConfig.DeadlinesGenerationCooldown;
-            _scheduleView = scheduleView; 
             _deadlineFactory = deadlineFactory;
             _scheduleGrid = scheduleGrid;
         }
@@ -52,8 +51,8 @@ namespace GameFeatures.TowerDefence.ScheduleGeneration
             {
                 await UniTask.WaitForSeconds(_generationCooldown, cancellationToken: cancellationToken);
                 Deadline deadline = _deadlineFactory.Create();
-                deadline.View.transform.parent = _scheduleView.GridPivot;
-                deadline.View.transform.localPosition = _scheduleGrid.GetGridPositionClamped(new Vector3(Random.Range(0, _scheduleGrid.MaxX), _scheduleGrid.MaxY));
+                _scheduleGrid.SnapToGrid(deadline.View.transform,
+                    new Vector3(_scheduleGrid.MaxX, Random.Range(0, _scheduleGrid.MaxY)));
                 deadline.View.transform.localRotation = quaternion.identity;
             }
         }

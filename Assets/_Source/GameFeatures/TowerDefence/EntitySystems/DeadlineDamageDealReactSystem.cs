@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Core.DataLoading;
 using Core.EntitySystem;
-using Core.Factory;
 using Core.ObjectContainer;
 using Core.PhysicsDetection;
 using GameFeatures.TowerDefence.Configs;
@@ -9,11 +8,11 @@ using UnityEngine;
 
 namespace GameFeatures.TowerDefence
 {
-    public class DeadlineDamageDealReactSystem : ReactiveSystem<Deadline>, ICollisionEnterListener
+    public class DeadlineDamageDealReactSystem : ReactiveSystem<Deadline>, ITriggerEnterListener
     {
         private readonly LayerMask _damageableLayerMask;
         
-        public DeadlineDamageDealReactSystem(ObjectContainer<Deadline> objectContainer, DataRepository<ScriptableObject> dataRepository, PoolFactory<Deadline> projectilePoolFactory) : base(objectContainer)
+        public DeadlineDamageDealReactSystem(ObjectContainer<Deadline> objectContainer, IRepository<ScriptableObject> dataRepository) : base(objectContainer)
         {
             DeadlinesConfig config = dataRepository.GetItem<DeadlinesConfig>().FirstOrDefault();
             if(config != null)
@@ -24,16 +23,21 @@ namespace GameFeatures.TowerDefence
         {
             obj.View.CollisionDetector.Subscribe(this, _damageableLayerMask, obj);
         }
-        
-        public void CollisionEnter(Collision other, object additionalData = null)
+
+        public override void Unsubscribe(Deadline obj)
+        {
+            obj.View.CollisionDetector.Unsubscribe(this);
+        }
+
+        public void TriggerEnter(Collider other, object additionalData = null)
         {
             Deadline deadline = (Deadline)additionalData;
             if(deadline == null) return;
             
-            if(other.collider.TryGetComponent(out GameEntityLinker gameObject) 
+            if(other.attachedRigidbody.TryGetComponent(out GameEntityLinker gameObject) 
                && gameObject.GameEntity is IDamageable damageable)
             {
-                damageable.Health = 0;
+                damageable.Health -= deadline.Damage;
             }
         }
     }

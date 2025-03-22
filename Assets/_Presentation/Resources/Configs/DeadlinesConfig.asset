@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: DeadlinesConfig
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 8251956652573262317, guid: d620c3a7d13e0df448f5f085d542aa87, type: 3}
-  <Health>k__BackingField: 0
-  <DamageLayerMask>k__BackingField:
+  <Health>k__BackingField: 2
+  <DamageableLayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 128
+  <ExpirationLineLayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 512
   <MoveDirection>k__BackingField: {x: -1, y: 0, z: 0}
-  <MoveSpeed>k__BackingField: 1
+  <MoveSpeed>k__BackingField: 0.5
+  <Damage>k__BackingField: 1

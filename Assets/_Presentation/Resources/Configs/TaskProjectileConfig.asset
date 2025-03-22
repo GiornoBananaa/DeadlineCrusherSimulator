@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3acbeb33b7fe432d9d50d0ba6b2d485b, type: 3}
   m_Name: TaskProjectileConfig
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 0}
-  <DestroyLayerMask>k__BackingField:
+  <Prefab>k__BackingField: {fileID: 7581553077064464620, guid: 1110dd16c9b3ba24fa430218fdf7a297, type: 3}
+  <DamageableLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
-  <MoveSpeed>k__BackingField: 0
-  <Damage>k__BackingField: 0
+  <LifeTime>k__BackingField: 4
+  <MoveSpeed>k__BackingField: 3
+  <Damage>k__BackingField: 1

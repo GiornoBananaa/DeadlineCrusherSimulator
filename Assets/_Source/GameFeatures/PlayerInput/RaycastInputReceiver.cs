@@ -53,7 +53,7 @@ namespace GameFeatures.PlayerInput
 
         private void UpdateInputReceive()
         {
-            if (!_receivedInputInFrame)
+            if (_receivingInput && !_receivedInputInFrame)
             {
                 _receivingInput = false;
                 OnInputEnded?.Invoke(_lastHitPosition);
@@ -64,7 +64,7 @@ namespace GameFeatures.PlayerInput
         
         private void UpdateRayPointReceive()
         {
-            if (!_receivedRayPointInFrame)
+            if (_receivingRayPoint && !_receivedRayPointInFrame)
             {
                 _receivingRayPoint = false;
                 OnRayPointedEnd?.Invoke(_lastRayPoint);

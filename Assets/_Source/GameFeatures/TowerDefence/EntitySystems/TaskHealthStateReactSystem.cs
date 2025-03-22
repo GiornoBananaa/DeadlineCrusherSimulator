@@ -1,23 +1,29 @@
 ﻿using Core.EntitySystem;
 using Core.Factory;
 using Core.ObjectContainer;
+using UnityEngine;
 
 namespace GameFeatures.TowerDefence
 {
     public class TaskHealthStateReactSystem : ReactiveSystem<Task>
     {
-        private readonly PoolFactory<Task> _poolFactory;
+        private readonly IPoolFactory<Task> _poolFactory;
         
-        public TaskHealthStateReactSystem(ObjectContainer<Task> objectContainer, PoolFactory<Task> poolFactory) : base(objectContainer)
+        public TaskHealthStateReactSystem(ObjectContainer<Task> objectContainer, IPoolFactory<Task> poolFactory) : base(objectContainer)
         {
             _poolFactory = poolFactory;
         }
 
         public override void Subscribe(Task obj)
         {
-            obj.OnHealthChanged += (health) => OnHealthChanged(obj, health);
+            obj.OnHealthChanged += OnHealthChanged;
         }
-        
+
+        public override void Unsubscribe(Task obj)
+        {
+            obj.OnHealthChanged -= OnHealthChanged;
+        }
+
         private void OnHealthChanged(Task task, float health)
         {
             if(health <= 0)

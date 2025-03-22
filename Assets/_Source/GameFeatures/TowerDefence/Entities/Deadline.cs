@@ -11,17 +11,20 @@ namespace GameFeatures.TowerDefence
         public DeadlineView View { get; set; }
         public Vector3 MoveDirection { get; set; }
         public float MoveSpeed { get; set; }
+        public float Damage { get; set; }
         
         public float Health
         {
             get => _health;
             set
             {
+                bool changed = !Mathf.Approximately(_health, value);
                 _health = value;
-                OnHealthChanged?.Invoke(_health);
+                if(changed)
+                    OnHealthChanged?.Invoke(this, _health);
             }
         }
 
-        public event Action<float> OnHealthChanged;
+        public event Action<Deadline, float> OnHealthChanged;
     }
 }

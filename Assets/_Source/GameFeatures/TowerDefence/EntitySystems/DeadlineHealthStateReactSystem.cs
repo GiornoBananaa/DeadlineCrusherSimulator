@@ -6,16 +6,21 @@ namespace GameFeatures.TowerDefence
 {
     public class DeadlineHealthStateReactSystem : ReactiveSystem<Deadline>
     {
-        private readonly PoolFactory<Deadline> _poolFactory;
+        private readonly IPoolFactory<Deadline> _poolFactory;
         
-        public DeadlineHealthStateReactSystem(ObjectContainer<Deadline> objectContainer, PoolFactory<Deadline> poolFactory) : base(objectContainer)
+        public DeadlineHealthStateReactSystem(ObjectContainer<Deadline> objectContainer, IPoolFactory<Deadline> poolFactory) : base(objectContainer)
         {
             _poolFactory = poolFactory;
         }
 
         public override void Subscribe(Deadline obj)
         {
-            obj.OnHealthChanged += (health) => OnHealthChanged(obj, health);
+            obj.OnHealthChanged += OnHealthChanged;
+        }
+
+        public override void Unsubscribe(Deadline obj)
+        {
+            obj.OnHealthChanged -= OnHealthChanged;
         }
         
         private void OnHealthChanged(Deadline deadline, float health)

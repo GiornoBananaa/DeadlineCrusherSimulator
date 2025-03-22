@@ -9,12 +9,12 @@ using UnityEngine;
 
 namespace GameFeatures.TowerDefence
 {
-    public class ProjectileDamageDealReactSystem : ReactiveSystem<TaskProjectile>, ICollisionEnterListener
+    public class ProjectileDamageDealReactSystem : ReactiveSystem<TaskProjectile>, ITriggerEnterListener
     {
         private readonly LayerMask _destroyLayerMask;
-        private readonly PoolFactory<TaskProjectile> _projectilePoolFactory;
+        private readonly IPoolFactory<TaskProjectile> _projectilePoolFactory;
         
-        public ProjectileDamageDealReactSystem(ObjectContainer<TaskProjectile> objectContainer, DataRepository<ScriptableObject> dataRepository, PoolFactory<TaskProjectile> projectilePoolFactory) : base(objectContainer)
+        public ProjectileDamageDealReactSystem(ObjectContainer<TaskProjectile> objectContainer, IRepository<ScriptableObject> dataRepository, IPoolFactory<TaskProjectile> projectilePoolFactory) : base(objectContainer)
         {
             TaskProjectileConfig config = dataRepository.GetItem<TaskProjectileConfig>().FirstOrDefault();
             if(config != null)
@@ -27,13 +27,19 @@ namespace GameFeatures.TowerDefence
         {
             obj.View.CollisionDetector.Subscribe(this, _destroyLayerMask, obj);
         }
-        
-        public void CollisionEnter(Collision other, object additionalData = null)
+
+        public override void Unsubscribe(TaskProjectile obj)
+        {
+            obj.View.CollisionDetector.Unsubscribe(this);
+        }
+
+        public void TriggerEnter(Collider other, object additionalData = null)
         {
             TaskProjectile deadline = (TaskProjectile)additionalData;
+            
             if(deadline == null) return;
             
-            if(other.collider.TryGetComponent(out GameEntityLinker gameObject) 
+            if(other.attachedRigidbody.TryGetComponent(out GameEntityLinker gameObject) 
                && gameObject.GameEntity is IDamageable damageable)
             {
                 damageable.Health -= deadline.Damage;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Core.DataLoading;
-using GameFeatures.Clicker.Configs;
 using UnityEngine;
 
 namespace GameFeatures.Clicker
@@ -12,7 +11,7 @@ namespace GameFeatures.Clicker
         private readonly string[] _textLines;
         private int _currentTextLine;
         
-        public CodeWriter(IRepository<ScriptableObject> dataRepository, GameFeatures.Clicker.Clicker clicker, TextWriterView textView)
+        public CodeWriter(IRepository<ScriptableObject> dataRepository, ClickCounter clickCounter, TextWriterView textView)
         {
             _textView = textView;
             
@@ -22,7 +21,7 @@ namespace GameFeatures.Clicker
                 throw new NullReferenceException("No CodeWritingConfig found");
             
             _textLines = config.TextLines;
-            clicker.OnClick += WriteNextLine;
+            clickCounter.OnClick += WriteNextLine;
         }
 
         private void WriteNextLine()

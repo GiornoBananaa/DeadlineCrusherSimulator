@@ -32,7 +32,7 @@ namespace GameFeatures.PlayerInput
         {
             if (!Physics.Raycast(_mainCamera.ScreenPointToRay(Input.mousePosition), out hit))
                 return null;
-            if(hit.collider.gameObject == _lastReceiver.gameObject)
+            if(_lastReceiver && hit.collider.gameObject == _lastReceiver.gameObject)
                 return _lastReceiver;
             _lastReceiver = hit.collider.GetComponent<RaycastInputReceiver>();
             return _lastReceiver;

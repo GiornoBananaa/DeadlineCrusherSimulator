@@ -6,8 +6,9 @@ namespace GameFeatures.TowerDefence
     public class TaskProjectile : IGameEntity
     {
         public TaskProjectileView View { get; set; }
-        public Vector3 MoveDirection { get; set; }
         public float MoveSpeed { get; set; }
         public float Damage { get; set; }
+        public float LifeTime { get; set; }
+        public float LifeTimeCounter { get; set; }
     }
 }

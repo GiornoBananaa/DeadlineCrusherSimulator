@@ -8,10 +8,10 @@ namespace GameFeatures.TowerDefence
 {
     public class TaskShootingSystem : ExecuteSystem<Task>
     {
-        private readonly PoolFactory<TaskProjectile> _projectileFactory;
+        private readonly IPoolFactory<TaskProjectile> _projectileFactory;
         
         public TaskShootingSystem(ObjectContainer<Task> objectContainer, ServiceUpdater serviceUpdater,
-            PoolFactory<TaskProjectile> projectileFactory) : base(objectContainer, serviceUpdater)
+            IPoolFactory<TaskProjectile> projectileFactory) : base(objectContainer, serviceUpdater)
         {
             _projectileFactory = projectileFactory;
         }

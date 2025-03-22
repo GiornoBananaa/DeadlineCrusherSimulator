@@ -8,7 +8,9 @@ namespace GameFeatures.TowerDefence.Configs
         [field: SerializeField] public DeadlineView Prefab { get; private set; }
         [field: SerializeField] public float Health { get; private set; }
         [field: SerializeField] public LayerMask DamageableLayerMask { get; private set; }
+        [field: SerializeField] public LayerMask ExpirationLineLayerMask { get; private set; }
         [field: SerializeField] public Vector3 MoveDirection { get; private set; }
         [field: SerializeField] public float MoveSpeed { get; private set; }
+        [field: SerializeField] public float Damage { get; private set; }
     }
 }
