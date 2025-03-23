@@ -2,7 +2,7 @@
 
 namespace GameFeatures.WorkProgress
 {
-    [CreateAssetMenu(menuName = "Configs/TowerDefence/WorkExpirationConfig")]
+    [CreateAssetMenu(menuName = "Configs/WorkExpirationConfig")]
     public class WorkExpirationConfig : ScriptableObject
     {
         [field: SerializeField] public int ExpiredDeadlinesForDefeat { get; private set; }

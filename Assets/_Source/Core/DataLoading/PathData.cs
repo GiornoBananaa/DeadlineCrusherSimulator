@@ -8,6 +8,7 @@
         public const string DEADLINES_CONFIG_PATH = "Configs/";
         public const string SCHEDULE_GENERATION_CONFIG_PATH = "Configs/";
         public const string WORK_PROGRESS_CONFIG_PATH = "Configs/";
+        public const string WORK_EXPIRATION_CONFIG_PATH = "Configs/";
         public const string SCHEDULE_GRID_CONFIG_PATH = "Configs/";
     }
 }

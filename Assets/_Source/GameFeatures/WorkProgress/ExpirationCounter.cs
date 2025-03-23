@@ -6,33 +6,42 @@ using UnityEngine;
 
 namespace GameFeatures.WorkProgress
 {
-    public class ExpirationCounter
+    public class ExpirationCounter : IResettable
     {
-        private readonly GameStateMachine _gameStateMachine;
+        private readonly float _maxExpiredDeadlines;
         private float _expiredDeadlines;
-        private float _maxExpiredDeadlines;
+        
+        public bool AllDeadlinesExpired { get; private set; }
         
         public event Action<float> OnPercentageChanged;
         public event Action OnAllDeadlinesExpired;
 
-        public ExpirationCounter(IRepository<ScriptableObject> repository, GameStateMachine gameStateMachine)
+        public ExpirationCounter(IRepository<ScriptableObject> repository)
         {
             WorkExpirationConfig config = repository.GetItem<WorkExpirationConfig>().FirstOrDefault();
             if (config == null)
                 throw new NullReferenceException("No WorkExpirationConfig found");
+            _maxExpiredDeadlines = config.ExpiredDeadlinesForDefeat; ;
+        }
 
-            _gameStateMachine = gameStateMachine;
+        public void Reset()
+        {
+            _expiredDeadlines = 0;
+            AllDeadlinesExpired = false;
+            OnPercentageChanged?.Invoke(0);
         }
         
         public void AddExpiredDeadline()
         {
+            if(AllDeadlinesExpired) return;
+            
             _expiredDeadlines++;
             OnPercentageChanged?.Invoke(Mathf.InverseLerp(0, _maxExpiredDeadlines, _expiredDeadlines));
             
-            if (_expiredDeadlines > _maxExpiredDeadlines)
+            if (_expiredDeadlines >= _maxExpiredDeadlines)
             {
+                AllDeadlinesExpired = true;
                 OnAllDeadlinesExpired?.Invoke();
-                _gameStateMachine.SetState(GameStates.Defeat);
             }
         }
     }

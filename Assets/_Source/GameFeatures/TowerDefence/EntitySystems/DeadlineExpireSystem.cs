@@ -21,7 +21,7 @@ namespace GameFeatures.TowerDefence
         {
             DeadlinesConfig config = dataRepository.GetItem<DeadlinesConfig>().FirstOrDefault();
             if(config != null)
-                _expirationLineLayerMask = config.DamageableLayerMask;
+                _expirationLineLayerMask = config.ExpirationLineLayerMask;
 
             _expirationCounter = expirationCounter;
             _poolFactory = poolFactory;

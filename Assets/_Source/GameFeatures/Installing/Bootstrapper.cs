@@ -16,7 +16,7 @@ namespace GameFeatures.Installing
         
         public void Start()
         {
-            _gameStateMachine.SetState(GameStates.Game);
+            _gameStateMachine.SetState(GameStates.Menu);
         }
     }
 }

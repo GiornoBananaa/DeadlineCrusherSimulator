@@ -1,8 +1,9 @@
 ﻿using System;
+using GameFeatures.WorkProgress;
 
 namespace GameFeatures.Clicker
 {
-    public class ClickCounter
+    public class ClickCounter : IResettable
     {
         private uint _clicks;
 
@@ -14,6 +15,11 @@ namespace GameFeatures.Clicker
         {
             _clicks++;
             OnClick?.Invoke();
+        }
+        
+        public void Reset()
+        {
+            _clicks = 0;
         }
     }
 }

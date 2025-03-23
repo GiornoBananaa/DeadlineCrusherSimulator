@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Core.DataLoading;
+using GameFeatures.WorkProgress;
 using UnityEngine;
 
 namespace GameFeatures.Clicker
 {
-    public class CodeWriter
+    public class CodeWriter : IResettable
     {
         private readonly TextWriterView _textView;
         private readonly string[] _textLines;
@@ -33,6 +34,12 @@ namespace GameFeatures.Clicker
             
             
             _currentTextLine++;
+        }
+
+        public void Reset()
+        {
+            _currentTextLine = 0;
+            _textView.Clear();
         }
     }
 }

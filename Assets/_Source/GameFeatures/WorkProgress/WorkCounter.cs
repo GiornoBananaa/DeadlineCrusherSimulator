@@ -6,7 +6,12 @@ using UnityEngine;
 
 namespace GameFeatures.WorkProgress
 {
-    public class WorkCounter
+    public interface IResettable
+    {
+        void Reset();
+    }
+    
+    public class WorkCounter : IResettable
     {
         private readonly int _workCountForTask;
         private int _workCounter;
@@ -25,6 +30,13 @@ namespace GameFeatures.WorkProgress
             
             _workCountForTask = config.WorkCountForTask;
             clicker.OnClick += AddWorkProgress;
+        }
+
+        public void Reset()
+        {
+            _workCounter = 0;
+            OnNewWork?.Invoke();
+            OnWorkPercentageChanged?.Invoke(0);
         }
         
         public bool TryNextWork()

@@ -3,6 +3,7 @@ using Core.Factory;
 using Core.ObjectContainer;
 using GameFeatures.Clicker;
 using GameFeatures.GameState;
+using GameFeatures.Menu;
 using GameFeatures.PlayerInput;
 using GameFeatures.TowerDefence;
 using GameFeatures.TowerDefence.Configs;
@@ -20,12 +21,14 @@ namespace GameFeatures.Installing
         [SerializeField] private TaskPlacingPredictionView _taskPlacingPredictionView;
         [SerializeField] private TextWriterView _textWriterView;
         [SerializeField] private ScheduleView _scheduleView;
+        [SerializeField] private MenuPanelView _menuPanelView;
         
         public override void InstallBindings()
         {
             BindDataLoad();
             BindPlayerInput();
             BindGameStates();
+            BindMenu();
             BindWorkProgress();
             BindEntitySystems();
             BindClickerFeature();
@@ -42,6 +45,11 @@ namespace GameFeatures.Installing
             Container.Bind<GameStateMachine>().AsSingle();
         }
         
+        private void BindMenu()
+        {
+            Container.Bind<MenuPanelView>().FromInstance(_menuPanelView).AsSingle();
+        }
+        
         private void BindEntitySystems()
         {
             Container.BindInterfacesAndSelfTo<Core.EntitySystem.ServiceUpdater>().AsSingle();
@@ -53,19 +61,21 @@ namespace GameFeatures.Installing
         
         private void BindWorkProgress()
         {
-            Container.Bind<WorkCounter>().AsSingle();
-            Container.Bind<ExpirationCounter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WorkCounter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ExpirationCounter>().AsSingle();
         }
         
         private void BindClickerFeature()
         {
-            Container.Bind<ClickCounter>().AsSingle();
-            Container.Bind<CodeWriter>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ClickCounter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CodeWriter>().AsSingle().NonLazy();
             Container.Bind<TextWriterView>().FromInstance(_textWriterView).AsSingle();
         }
         
         private void BindTowerDefenceFeature()
         {
+            Container.BindInterfacesAndSelfTo<EntityResetter>().AsSingle();
+            
             Container.Bind<IPoolFactory<Task>>().To<TaskCreator>().AsSingle();
             Container.Bind<IPoolFactory<Deadline>>().To<DeadlineCreator>().AsSingle();
             Container.Bind<IPoolFactory<TaskProjectile>>().To<TaskProjectileCreator>().AsSingle();
@@ -113,6 +123,8 @@ namespace GameFeatures.Installing
                 typeof(GenerationConfig), dataRepository);
             resourceLoader.LoadResource(PathData.WORK_PROGRESS_CONFIG_PATH,
                 typeof(WorkProgressConfig), dataRepository);
+            resourceLoader.LoadResource(PathData.WORK_EXPIRATION_CONFIG_PATH,
+                typeof(WorkExpirationConfig), dataRepository);
         }
     }
 }

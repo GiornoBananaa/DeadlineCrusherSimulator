@@ -21,6 +21,13 @@ namespace GameFeatures.Clicker
             UpdateText();
         }
         
+        public void Clear()
+        {
+            _textQueue.Clear();
+            
+            UpdateText();
+        }
+        
         private void UpdateText()
         {
             string text = "";

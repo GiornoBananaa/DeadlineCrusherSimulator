@@ -13,6 +13,7 @@ namespace Core.StateMachine
             foreach (IState state in states)
             {
                 _states.Add(state.GetType(), state);
+                state.SetOwner(this);
             }
 
             _currentState = null;

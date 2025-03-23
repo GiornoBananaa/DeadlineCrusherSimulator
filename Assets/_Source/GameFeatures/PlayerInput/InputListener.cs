@@ -21,7 +21,6 @@ namespace GameFeatures.PlayerInput
         {
             _gameInput = new GameInputActions();
             _gameInput.Enable();
-            EnableInput();
         }
         
         private void OnDestroy()
