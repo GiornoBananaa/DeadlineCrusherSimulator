@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GenerationConfig
   m_EditorClassIdentifier: 
   <DeadlinesGenerationCooldown>k__BackingField: 3
+  <GenerationCooldownMultiplierAfterSpawn>k__BackingField: 0.985

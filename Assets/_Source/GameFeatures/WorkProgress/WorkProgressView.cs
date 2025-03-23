@@ -14,6 +14,8 @@ namespace GameFeatures.WorkProgress
         public void Construct(WorkCounter workCounter)
         {
             workCounter.OnWorkPercentageChanged += OnProgressChanged;
+            _progressBar.fillAmount = 0;
+            _text.gameObject.SetActive(false);
         }
 
         private void OnProgressChanged(float progress)

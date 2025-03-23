@@ -16,7 +16,7 @@ namespace GameFeatures.TowerDefence
         {
             foreach (var deadline in objects)
             {
-                Vector3 position = deadline.View.transform.position + deadline.MoveDirection * (deadline.MoveSpeed * Time.fixedDeltaTime);
+                Vector3 position = deadline.View.transform.position - deadline.View.transform.right * (deadline.MoveSpeed * Time.fixedDeltaTime);
                 deadline.View.Rigidbody.MovePosition(position);
             }
         }

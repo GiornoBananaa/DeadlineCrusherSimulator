@@ -15,10 +15,10 @@ namespace GameFeatures.TowerDefence
         private readonly ObjectPool<Deadline> _pool;
         private readonly ObjectContainer<Deadline> _deadlinesContainer;
         private readonly DeadlineView _prefab;
-        private readonly Vector3 _moveDirection;
         private readonly float _moveSpeed;
         private readonly float _health;
         private readonly float _damage;
+        private readonly float _selfDamage;
         
         public DeadlineCreator(IRepository<ScriptableObject> repository, ObjectContainer<Deadline> deadlinesContainer)
         {
@@ -27,10 +27,10 @@ namespace GameFeatures.TowerDefence
                 throw new NullReferenceException("No DeadlinesConfig found");
             
             _prefab = deadline.Prefab;
-            _moveDirection = deadline.MoveDirection;
             _moveSpeed = deadline.MoveSpeed;
             _health = deadline.Health;
             _damage = deadline.Damage;
+            _selfDamage = deadline.SelfDamage;
             
             _pool = new ObjectPool<Deadline>(CreateTask);
             _deadlinesContainer = deadlinesContainer;
@@ -65,9 +65,9 @@ namespace GameFeatures.TowerDefence
         
         private void ResetValues(Deadline deadline)
         {
-            deadline.MoveDirection = _moveDirection;
             deadline.MoveSpeed = _moveSpeed;
             deadline.Damage = _damage;
+            deadline.SelfDamage = _selfDamage;
             deadline.Health = _health;
         }
     }

@@ -20,12 +20,12 @@ namespace GameFeatures.GameState
         private readonly StateMachine _gameStateMachine;
         
         public GameStateMachine(IEnumerable<IObjectGenerator> objectGenerators, IEnumerable<IResettable> resettable,
-            EntityResetter entityResetter, ExpirationCounter expirationCounter, MenuPanelView menuView, InputListener inputListener)
+            EntityResetter entityResetter, ExpirationCounter expirationCounter, MenuPanelView menuView, DefeatPanelView defeatPanelView, InputListener inputListener)
         {
             _gameStateMachine = new StateMachine(
                 new MenuState(menuView),
                 new GameState(objectGenerators, resettable, entityResetter, expirationCounter, inputListener),
-                new DefeatState()
+                new DefeatState(defeatPanelView)
                 );
         }
 

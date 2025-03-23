@@ -7,7 +7,7 @@ namespace GameFeatures.Clicker
     {
         [SerializeField] private TextAsset _textAsset;
         
-        [HideInInspector] public string[] TextLines;
+        [SerializeField] public string[] TextLines;
         
         public void ApplyTextAsset()
         {

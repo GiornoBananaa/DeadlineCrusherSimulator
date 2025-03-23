@@ -27,7 +27,7 @@ namespace GameFeatures.Clicker
                 ((CodeWritingConfig)serializedObject.targetObject).ApplyTextAsset();
             }
             EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField($"Registered lines: {_textLines.arraySize}");
+            EditorGUILayout.PropertyField(_textLines);
             
             serializedObject.ApplyModifiedProperties();
         }

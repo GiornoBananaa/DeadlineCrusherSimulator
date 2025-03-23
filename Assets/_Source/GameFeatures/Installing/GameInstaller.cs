@@ -1,6 +1,8 @@
 using Core.DataLoading;
 using Core.Factory;
 using Core.ObjectContainer;
+using Core.DataSave;
+using Core.DataSave.Core;
 using GameFeatures.Clicker;
 using GameFeatures.GameState;
 using GameFeatures.Menu;
@@ -17,19 +19,23 @@ namespace GameFeatures.Installing
 {
     public class GameInstaller : MonoInstaller
     {
+        [SerializeField] private InputListener _inputListener;
         [SerializeField] private RaycastInputListener _raycastInputListener;
         [SerializeField] private TaskPlacingPredictionView _taskPlacingPredictionView;
         [SerializeField] private TextWriterView _textWriterView;
         [SerializeField] private ScheduleView _scheduleView;
         [SerializeField] private MenuPanelView _menuPanelView;
+        [SerializeField] private DefeatPanelView _defeatPanelView;
         
         public override void InstallBindings()
         {
             BindDataLoad();
+            BindDataSave();
             BindPlayerInput();
             BindGameStates();
             BindMenu();
             BindWorkProgress();
+            BindPlayerScore();
             BindEntitySystems();
             BindClickerFeature();
             BindTowerDefenceFeature();
@@ -37,6 +43,7 @@ namespace GameFeatures.Installing
         
         private void BindPlayerInput()
         {
+            Container.Bind<InputListener>().FromInstance(_inputListener).AsSingle();
             Container.Bind<RaycastInputListener>().FromInstance(_raycastInputListener).AsSingle();
         }
         
@@ -48,6 +55,12 @@ namespace GameFeatures.Installing
         private void BindMenu()
         {
             Container.Bind<MenuPanelView>().FromInstance(_menuPanelView).AsSingle();
+            Container.Bind<DefeatPanelView>().FromInstance(_defeatPanelView).AsSingle();
+        }
+        
+        private void BindPlayerScore()
+        {
+            Container.BindInterfacesAndSelfTo<PlayerScore.PlayerScore>().AsSingle();
         }
         
         private void BindEntitySystems()
@@ -86,6 +99,7 @@ namespace GameFeatures.Installing
             Container.Bind<TaskProjectileMovementSystem>().AsSingle().NonLazy();
             Container.Bind<TaskProjectileLifeTimeSystem>().AsSingle().NonLazy();
             Container.Bind<TaskShootingSystem>().AsSingle().NonLazy();
+            Container.Bind<TaskLifeTimeSystem>().AsSingle().NonLazy();
             Container.Bind<DeadlineHealthStateReactSystem>().AsSingle().NonLazy();
             Container.Bind<TaskHealthStateReactSystem>().AsSingle().NonLazy();
             Container.Bind<DeadlineDamageDealReactSystem>().AsSingle().NonLazy();
@@ -95,6 +109,14 @@ namespace GameFeatures.Installing
             Container.Bind<ScheduleGrid>().AsSingle().NonLazy();
             Container.Bind<TaskPlacingPredictionView>().FromInstance(_taskPlacingPredictionView).AsSingle();
             Container.Bind<TaskPlacer>().AsSingle().NonLazy();
+        }
+        
+        public void BindDataSave()
+        {
+            Container.BindInterfacesAndSelfTo<SaveProvider<PlayerScore.ScoreData>>().AsSingle();
+            Container.Bind<IGameDataLoader>().To<JsonLoader>().AsSingle();
+            Container.Bind<IGameDataSaver>().To<JsonSaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SceneEventSaveInvoker>().AsSingle().NonLazy();
         }
         
         private void BindDataLoad()

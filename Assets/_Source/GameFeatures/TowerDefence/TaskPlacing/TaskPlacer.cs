@@ -70,6 +70,7 @@ namespace GameFeatures.TowerDefence.TaskPlacing
             if(!_scheduleGrid.IsOnGrid(inputPosition) || !_workCounter.TryNextWork()) return;
             Task task = _taskCreator.Create();
             task.View.transform.position = inputPosition;
+            task.View.transform.rotation = _scheduleView.GridPivot.rotation;
             _scheduleGrid.SnapToGrid(task.View.transform, maxRow: _maxRow);
         }
     }

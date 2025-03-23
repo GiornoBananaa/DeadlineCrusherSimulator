@@ -11,6 +11,8 @@ namespace GameFeatures.TowerDefence
         public TaskView View { get; set; }
         public float ShootingCooldown { get; set; }
         public float ShootingCounter { get; set; }
+        public float LifeTime { get; set; }
+        public float LifeTimeCounter { get; set; }
         
         public float Health
         {

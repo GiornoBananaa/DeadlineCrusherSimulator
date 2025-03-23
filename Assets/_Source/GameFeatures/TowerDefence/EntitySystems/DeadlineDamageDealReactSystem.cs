@@ -38,6 +38,7 @@ namespace GameFeatures.TowerDefence
                && gameObject.GameEntity is IDamageable damageable)
             {
                 damageable.Health -= deadline.Damage;
+                deadline.Health -= deadline.SelfDamage;
             }
         }
     }

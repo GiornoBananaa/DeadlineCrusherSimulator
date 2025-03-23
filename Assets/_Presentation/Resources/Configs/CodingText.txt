@@ -1,40 +1,190 @@
 public class InputListener : MonoBehaviour
-    {
-        private GameInputActions _gameInput;
-        private Clicker _clicker;
+{
+    private GameInputActions _gameInput;
+    private Clicker _clicker;
 
-        [Inject]
-        public void Construct(Clicker clicker)
-        {
-            _clicker = clicker;
-        }
+    [Inject]
+    public void Construct(Clicker clicker)
+    {
+        _clicker = clicker;
+    }
+
+    private void Awake()
+    {
+        _gameInput = new GameInputActions();
+        _gameInput.Enable();
+        EnableInput();
+    }
     
-        private void Awake()
+    private void OnDestroy()
+    {
+        DisableInput();
+    }
+
+    public void EnableInput()
+    {
+        _gameInput.Enable();
+        _gameInput.GlobalActionMap.Work.started += Click;
+    }
+
+    public void DisableInput()
+    {
+        _gameInput.Disable();
+        _gameInput.GlobalActionMap.Work.started -= Click;
+    }
+
+    private void Click(InputAction.CallbackContext callbackContext)
+    {
+        _clicker.Click();
+    }
+}
+    
+public class GameState : IState
+{
+    private readonly IEnumerable<IObjectGenerator> _objectGenerators;
+    private readonly IEnumerable<IResettable> _resettable;
+    private readonly EntityResetter _entityResetter;
+    private readonly ExpirationCounter _expirationCounter;
+    private readonly InputListener _inputListener;
+    private StateMachine _owner;
+    
+    public GameState(IEnumerable<IObjectGenerator> objectGenerators, IEnumerable<IResettable> resettable, 
+        EntityResetter entityResetter, ExpirationCounter expirationCounter, InputListener inputListener)
+    {
+        _objectGenerators = objectGenerators;
+        _resettable = resettable;
+        _entityResetter = entityResetter;
+        _expirationCounter = expirationCounter;
+        _inputListener = inputListener;
+    }
+
+    public void SetOwner(StateMachine owner)
+    {
+        _owner = owner;
+    }
+
+    public void Enter()
+    {
+        foreach (var generator in _objectGenerators)
         {
-            _gameInput = new GameInputActions();
-            _gameInput.Enable();
-            EnableInput();
+            generator.StartGeneration();
+        }
+
+        foreach (var resettable in _resettable)
+        {
+            resettable.Reset();
         }
         
-        private void OnDestroy()
-        {
-            DisableInput();
-        }
-
-        public void EnableInput()
-        {
-            _gameInput.Enable();
-            _gameInput.GlobalActionMap.Work.started += Click;
-        }
+        _inputListener.EnableInput();
+        
+        _expirationCounter.OnAllDeadlinesExpired += OnAllDeadlinesExpired;
+    }
     
-        public void DisableInput()
+    public void Exit()
+    {
+        _expirationCounter.OnAllDeadlinesExpired -= OnAllDeadlinesExpired;
+        
+        _entityResetter.Reset();
+        _inputListener.DisableInput();
+        
+        foreach (var generator in _objectGenerators)
         {
-            _gameInput.Disable();
-            _gameInput.GlobalActionMap.Work.started -= Click;
-        }
-
-        private void Click(InputAction.CallbackContext callbackContext)
-        {
-            _clicker.Click();
+            generator.StopGeneration();
         }
     }
+
+    private void OnAllDeadlinesExpired()
+    {
+        _owner.ChangeState<DefeatState>();
+    }
+}
+
+public class Deadline : IGameEntity, IDamageable
+{
+    private float _health;
+    
+    public DeadlineView View { get; set; }
+    public float MoveSpeed { get; set; }
+    public float Damage { get; set; }
+    
+    public float Health
+    {
+        get => _health;
+        set
+        {
+            bool changed = !Mathf.Approximately(_health, value);
+            _health = value;
+            if(changed)
+                OnHealthChanged?.Invoke(this, _health);
+        }
+    }
+
+    public event Action<Deadline, float> OnHealthChanged;
+}
+
+public class TaskPlacer
+{
+    private readonly TaskPlacingPredictionView _taskPlacingPredictionView;
+    private readonly ScheduleView _scheduleView;
+    private readonly ScheduleGrid _scheduleGrid;
+    private readonly WorkCounter _workCounter;
+    private readonly IPoolFactory<Task> _taskCreator;
+    private readonly int _maxRow;
+    
+    public TaskPlacer(IRepository<ScriptableObject> dataRepository, ScheduleView scheduleView, ScheduleGrid scheduleGrid, 
+        TaskPlacingPredictionView taskPlacingPredictionView, IPoolFactory<Task> taskCreator, WorkCounter workCounter)
+    {
+        TasksConfig config = dataRepository.GetItem<TasksConfig>().FirstOrDefault();
+        if(config == null) return;
+        
+        _maxRow = config.MaxRow;
+        _taskCreator = taskCreator;
+        _scheduleGrid = scheduleGrid;
+        _scheduleView = scheduleView;
+        _taskPlacingPredictionView = taskPlacingPredictionView;
+        _workCounter = workCounter;
+        _workCounter.OnWorkIsDone += SubscribeOnInput;
+        _workCounter.OnNewWork += UnsubscribeFromInput;
+    }
+
+    public void SubscribeOnInput()
+    {
+        _scheduleView.RaycastInputReceiver.OnRayPointed += ShowPlacePrediction;
+        _scheduleView.RaycastInputReceiver.OnRayPointedEnd += HidePlacePrediction;
+        _scheduleView.RaycastInputReceiver.OnInputStarted += TryPlaceTask;
+    }
+
+    public void UnsubscribeFromInput()
+    {
+        _scheduleView.RaycastInputReceiver.OnRayPointed -= ShowPlacePrediction;
+        _scheduleView.RaycastInputReceiver.OnRayPointedEnd -= HidePlacePrediction;
+        _scheduleView.RaycastInputReceiver.OnInputStarted -= TryPlaceTask;
+        if(_taskPlacingPredictionView)
+            _taskPlacingPredictionView.HidePlacingPrediction();
+    }
+    
+    private void HidePlacePrediction(Vector3 inputPosition)
+    {
+        _taskPlacingPredictionView.HidePlacingPrediction();
+    }
+    
+    private void ShowPlacePrediction(Vector3 inputPosition)
+    {
+        if(!_scheduleGrid.IsOnGrid(inputPosition))
+        {
+            HidePlacePrediction(inputPosition);
+            return;
+        }
+        
+        _taskPlacingPredictionView.ShowPlacingPrediction(_scheduleGrid.GetLocalGridPositionClamped(inputPosition, maxRow: _maxRow));
+    }
+
+    private void TryPlaceTask(Vector3 inputPosition)
+    {
+        if(!_scheduleGrid.IsOnGrid(inputPosition) || !_workCounter.TryNextWork()) return;
+        Task task = _taskCreator.Create();
+        task.View.transform.position = inputPosition;
+        task.View.transform.rotation = _scheduleView.GridPivot.rotation;
+        _scheduleGrid.SnapToGrid(task.View.transform, maxRow: _maxRow);
+    }
+}

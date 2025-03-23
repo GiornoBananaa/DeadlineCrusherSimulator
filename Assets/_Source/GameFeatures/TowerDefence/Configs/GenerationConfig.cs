@@ -6,5 +6,6 @@ namespace GameFeatures.TowerDefence.Configs
     public class GenerationConfig : ScriptableObject
     {
         [field: SerializeField] public float DeadlinesGenerationCooldown { get; private set; }
+        [field: SerializeField] public float GenerationCooldownMultiplierAfterSpawn { get; private set; }
     }
 }

@@ -41,9 +41,8 @@ namespace GameFeatures.TowerDefence
         {
             Deadline deadline = (Deadline)additionalData;
             if(deadline == null) return;
-            
-            _expirationCounter.AddExpiredDeadline();
             _poolFactory.Release(deadline);
+            _expirationCounter.AddExpiredDeadline();
         }
     }
 }

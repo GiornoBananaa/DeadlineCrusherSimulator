@@ -21,6 +21,8 @@ namespace GameFeatures.TowerDefence
         private readonly Color[] _colors;
         private readonly float _shootingCooldown;
         private readonly float _health;
+        private readonly float _lifeTime;
+        
         public TaskCreator(IRepository<ScriptableObject> repository, ObjectContainer<Task> tasksContainer)
         {
             TasksConfig tasksConfig = repository.GetItem<TasksConfig>().FirstOrDefault();
@@ -31,6 +33,7 @@ namespace GameFeatures.TowerDefence
             _shootingCooldown = tasksConfig.ShootingCooldown;
             _health = tasksConfig.Health;
             _colors = tasksConfig.Colors;
+            _lifeTime = tasksConfig.LifeTime;
             _pool = new ObjectPool<Task>(CreateTask);
             _tasksContainer = tasksContainer;
         }
@@ -68,6 +71,8 @@ namespace GameFeatures.TowerDefence
             task.ShootingCooldown = _shootingCooldown;
             task.ShootingCounter = _shootingCooldown;
             task.Health = _health;
+            task.LifeTime = _lifeTime;
+            task.LifeTimeCounter = 0;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Core.StateMachine
     public class StateMachine
     {
         private readonly Dictionary<Type,IState> _states = new Dictionary<Type,IState>();
-        private readonly IState _currentState;
+        private IState _currentState;
         
         public StateMachine(params IState[] states)
         {
@@ -26,6 +26,7 @@ namespace Core.StateMachine
             if(newState == _currentState) return;
             _currentState?.Exit();
             newState.Enter();
+            _currentState = newState;
         }
     }
 }

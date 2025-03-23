@@ -17,15 +17,15 @@ namespace GameFeatures.WorkProgress
         public void Construct(ExpirationCounter expirationCounter)
         {
             expirationCounter.OnPercentageChanged += OnProgressChanged;
-            _progressBar.fillAmount = 0;
+            _progressBar.fillAmount = 1;
             _text.text = DEFAULT_TEXT;
         }
         
         private void OnProgressChanged(float progress)
         {
-            _progressBar.fillAmount = progress;
+            _progressBar.fillAmount = 1-progress;
             
-            if (Mathf.Approximately(progress, 1))
+            if (Mathf.Approximately(1-progress, 0))
                 _text.text = EXPIRED_DEADLINES_TEXT;
             else
                 _text.text = DEFAULT_TEXT;

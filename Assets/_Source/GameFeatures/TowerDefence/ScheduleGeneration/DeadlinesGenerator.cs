@@ -7,18 +7,21 @@ using Core.Factory;
 using Core.Generation;
 using GameFeatures.TowerDefence.Configs;
 using GameFeatures.TowerDefence.TaskPlacing;
+using GameFeatures.WorkProgress;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GameFeatures.TowerDefence.ScheduleGeneration
 {
-    public class DeadlinesGenerator : IObjectGenerator
+    public class DeadlinesGenerator : IObjectGenerator, IResettable
     {
         private readonly IPoolFactory<Deadline> _deadlineFactory;
         private readonly ScheduleGrid _scheduleGrid;
-        private readonly float _generationCooldown;
+        private readonly float _generationCooldownMultiplierAfterSpawn;
+        private readonly float _generationCooldownDefault;
         private readonly float _last;
+        private float _generationCooldown;
         
         private CancellationTokenSource _generationCancellationToken;
         
@@ -29,7 +32,9 @@ namespace GameFeatures.TowerDefence.ScheduleGeneration
             if (generationConfig == null)
                 throw new NullReferenceException("No GenerationConfig found");
             
-            _generationCooldown = generationConfig.DeadlinesGenerationCooldown;
+            _generationCooldownDefault = generationConfig.DeadlinesGenerationCooldown;
+            _generationCooldown = _generationCooldownDefault;
+            _generationCooldownMultiplierAfterSpawn = generationConfig.GenerationCooldownMultiplierAfterSpawn;
             _deadlineFactory = deadlineFactory;
             _scheduleGrid = scheduleGrid;
         }
@@ -44,7 +49,12 @@ namespace GameFeatures.TowerDefence.ScheduleGeneration
         {
             _generationCancellationToken?.Cancel();
         }
-
+        
+        public void Reset()
+        {
+            _generationCooldown = _generationCooldownDefault;
+        }
+        
         private async UniTask GenerationLoop(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -54,6 +64,8 @@ namespace GameFeatures.TowerDefence.ScheduleGeneration
                 _scheduleGrid.SnapToGrid(deadline.View.transform,
                     new Vector3(_scheduleGrid.MaxX, Random.Range(0, _scheduleGrid.MaxY)));
                 deadline.View.transform.localRotation = quaternion.identity;
+
+                _generationCooldown *= _generationCooldownMultiplierAfterSpawn;
             }
         }
     }
